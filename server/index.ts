@@ -5,7 +5,10 @@ import * as fs from 'fs';
 const bootstrap = () => {
   const wss = new WebSocket.Server({ port: 8082 });
   wss.on('connection', (ws: WebSocket) => {
-    runApp(ws);
+    console.log('connected!!!');
+    setTimeout(() => {
+      runApp(ws);
+    }, 2000);
   });
 };
 
@@ -24,7 +27,10 @@ const runApp = async (ws: WebSocket) => {
   await streamCamera.startCapture();
 
   // We can also listen to data events as they arrive
-  videoStream.on('data', (data) => console.log('New data', ws.send(data)));
+  videoStream.on('data', (data) => {
+    console.log('New data', data);
+    ws.send(data);
+  });
   videoStream.on('end', (data) => console.log('Video stream has ended'));
 
   // Wait for 5 seconds
